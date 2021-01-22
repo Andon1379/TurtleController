@@ -1,0 +1,21 @@
+<!doctype html>
+<style>
+    textarea { vertical-align: bottom; }
+    #output { overflow: auto; }
+    #output > p { overflow-wrap: break-word; }
+    #output span { color: blue; }
+    #output span.error { color: red; }
+</style>
+<h2>WebSocket Test</h2>
+<div class=websocket>
+    <textarea cols=20 rows=6></textarea>
+    <button onclick="onClickButton_connect();">connect</button>
+    <button onclick="onClickButton_disconnect();">disconnect</button>
+    <p id=connected_status>
+    </p>
+</div>
+<div class=send id=send_id>
+    <br>
+</div>
+<div class=output id=out_id></div>
+<script src="script.js"></script>

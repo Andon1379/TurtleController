@@ -1,0 +1,20 @@
+{
+  "name": "turtle",
+  "version": "1.0.0",
+  "description": "ComputerCraft Turtle websocket project",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo hi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "null"
+  },
+  "author": "Andon1379",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
+    "eslint": "^7.18.0"
+  }
+}

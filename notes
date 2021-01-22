@@ -1,0 +1,14 @@
+to compile .ts files:
+tsc <file>.ts
+to run the resulting .js file
+node <file>.js
+
+
+wss.on('listening', function listening(test) {
+    console.log(wss.address());
+    console.log(wss.host);
+});
+
+run the lua in mc
+
+./ngrok http 80
