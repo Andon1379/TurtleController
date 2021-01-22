@@ -12,3 +12,8 @@ wss.on('listening', function listening(test) {
 run the lua in mc in a turtle
 
 ./ngrok http 80
+
+
+https://gist.github.com/tylerneylon/59f4bcf316be525b30ab
+put this as a lua file called json.lua
+then do os.loadAPI("json.lua")

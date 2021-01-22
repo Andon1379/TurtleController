@@ -7,15 +7,12 @@ console.log("Starting Server...");
 wss.on('connection', function connection(ws) {
     //console.log(ws);
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
-    var identifier = message.slice(10);
-    if (identifier == "tur_client"){
+    console.log(message);
+    var data = JSON.parse(message);
+    console.log(data.type);
+    console.log(data.command);
+    if (data.isEval) {
       
-    } else if (identifier == "web_client"){
-
-    } else {
-      // do nothing
-      // dont respond
     }
   });
 });

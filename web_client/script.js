@@ -25,12 +25,14 @@ function onClickButton_connect() {
     console.log(socket.url);
 }
 
-function doSend(message) {
-    //ws.send(message);
+function doSend(client_name, is_eval, message) {
+    var client_type = "web_client"
+    var message_obj = {type:client_type, name:client_name, isEval:is_eval,command:message};
+    var JSON_message = JSON.stringify(message_obj);
+    // sending things
     console.log('sent: %s', message);
     writeToScreen_send("SENT: " + message);
-    // need to parse things in json to the server
-    socket.send("web_client: " + message);
+    socket.send(JSON_message);
 }
 
 function onClickButton_disconnect() {
@@ -56,9 +58,10 @@ function onClickButton_disconnect() {
 
 function onClickButton_send() {
     textarea = document.getElementById("send_id2");
-    var text = textarea.value;
+    //var text = textarea.value;
+    //var name = document.getElementById("username").value
     if (text != "") {
-        text && doSend(text);
+        text && doSend("web", false, text);
         sent_count++;
     }
     console.log(sent_count);

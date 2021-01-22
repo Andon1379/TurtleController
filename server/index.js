@@ -39,10 +39,14 @@ exports.__esModule = true;
 var ws_1 = require("ws");
 var ngrok_1 = require("ngrok");
 var wss = new ws_1.Server({ port: 5757 });
+console.log("Starting Server...");
 wss.on('connection', function connection(ws) {
     //console.log(ws);
     ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
+        console.log(message);
+        var data = JSON.parse(message);
+        console.log(data.type);
+        console.log(data.command);
     });
 });
 (function () { return __awaiter(void 0, void 0, void 0, function () {
