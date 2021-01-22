@@ -2,7 +2,6 @@ var output = document.querySelector("#output"),
     connected = false,
     connected_to = document.querySelector("div.websocket textarea").value;
 var send = document.getElementById('send_id');
-var output = document.getElementById('out_id');
 var sent_count = 0; 
 
 connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + connected_to + "<br></p>");
@@ -28,17 +27,17 @@ function doSend(message) {
 }
 
 function onClickButton_disconnect() {
+    var output = document.getElementById('out_id');
     var send3 = document.getElementById('send_id3'); 
     var send2 = document.getElementById('send_id2'); // very creative, i know
     var cnd_2 = document.getElementById('cnd_stat_2'); // connected status 2
-    var sent = document.getElementById('sent');
     if (connected == true) {
         send2.remove();
         send3.remove();
         cnd_2.remove();
-        for (i = 0; i < sent_count; i++){
-            sent.remove();
-        }
+        sent_count = 0;
+        output.remove();
+        send.insertAdjacentHTML("afterend", "<div class=output id=out_id></div>")
         connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + connected_to + "<br></p>");
         connected_to =  "";
         connected = false;
@@ -50,14 +49,17 @@ function onClickButton_disconnect() {
 function onClickButton_send() {
     textarea = document.getElementById("send_id2");
     var text = textarea.value;
-    text && doSend(text);
-    sent_count++;
-    consle.log(sent_count);
+    if (text != "") {
+        text && doSend(text);
+        sent_count++;
+    }
+    console.log(sent_count);
     textarea.value = "";
     textarea.focus();
 }
 
 function writeToScreen_send(message) {
+    var output = document.getElementById('out_id');
     output.insertAdjacentHTML("afterbegin", "<p id=sent>" + message + "</p>");
 }
 
