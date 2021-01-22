@@ -17,5 +17,6 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "semi": 2
     }
 }
