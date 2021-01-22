@@ -1,29 +1,36 @@
 var output = document.querySelector("#output"),
-    connected = false,
-    connected_to = document.querySelector("div.websocket textarea").value;
+    connected = false;
 var send = document.getElementById('send_id');
 var sent_count = 0; 
 
-connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + connected_to + "<br></p>");
+var ws_url = document.getElementById('ws_url');
+let socket = new WebSocket(ws_url.value);
+
+connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + socket + "<br></p>");
 
 function onClickButton_connect() {
     var cnd_2 = document.getElementById('cnd_stat_2');
     if (connected == false) {
+        // socket connections
+        ws_url = document.getElementById('ws_url');
+        socket = new WebSocket(ws_url.value);
+        
         send.insertAdjacentHTML("afterbegin", "<textarea cols=60 rows=6 id='send_id2'></textarea><button onclick='onClickButton_send();' id='send_id3'>send</button>");
         connected = true;
         cnd_2.remove();
-        connected_to = document.querySelector("div.websocket textarea").value;
-        connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + connected_to + "<br></p>");
+        connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + ws_url.value + "<br></p>");
     } else {
         onClickButton_disconnect();
     }
-    console.log(connected_to);
+    console.log(socket.url);
 }
 
 function doSend(message) {
     //ws.send(message);
     console.log('sent: %s', message);
     writeToScreen_send("SENT: " + message);
+    // need to parse things in json to the server
+    socket.send("web_client: " + message);
 }
 
 function onClickButton_disconnect() {
@@ -37,13 +44,14 @@ function onClickButton_disconnect() {
         cnd_2.remove();
         sent_count = 0;
         output.remove();
-        send.insertAdjacentHTML("afterend", "<div class=output id=out_id></div>")
-        connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + connected_to + "<br></p>");
-        connected_to =  "";
+        send.insertAdjacentHTML("afterend", "<div class=output id=out_id></div>");
+        // disconnect from websocket
+        socket.close();
+        connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + "" + "<br></p>");
         connected = false;
-        //connected_status.insertAdjacentHTML("afterbegin", "connected to: " + connected_to + "<br>");
+        //connected_status.insertAdjacentHTML("afterbegin", "connected to: " + "" + "<br>");
     }
-    console.log(connected_to)
+    //console.log(socket)
 }
 
 function onClickButton_send() {

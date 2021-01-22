@@ -46,13 +46,17 @@ wss.on('connection', function connection(ws) {
     });
 });
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var url;
+    var url, new_url;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, ngrok_1.connect(5757)];
             case 1:
                 url = _a.sent();
                 console.log(url);
+                new_url = url.slice(8, url.length);
+                console.log(new_url);
+                new_url = url.replace("https://", "wss://");
+                console.log(new_url);
                 return [2 /*return*/];
         }
     });
