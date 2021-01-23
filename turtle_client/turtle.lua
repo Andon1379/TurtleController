@@ -1,4 +1,4 @@
---os.loadAPI("json")
+os.loadAPI("json")
 local ws, err = http.websocket("db9fcbe68c86.ngrok.io")
 if err then
   print(err)
@@ -9,10 +9,11 @@ if ws then
   while true do
     local message = ws.receive()
     print(message)
-    --local obj = json.decode(message)
-    --if obj.type == 'eval' then
-    Send("hello")
-    --end
+    local obj = json.decode(message)
+    if obj.type == 'eval' then
+      Eval_cmd(obj.command)
+    --Send("hello")
+    end
   end
 end
 

@@ -38,6 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var ws_1 = require("ws");
 var ngrok_1 = require("ngrok");
+var turtle_ids = [];
+//var turtles_connected = turtle_ids.length();
+var turtle_names = ["jake", "joe", "bill", "sally"];
 var wss = new ws_1.Server({ port: 5757 });
 console.log("Starting Server...");
 wss.on('connection', function connection(ws) {
@@ -46,7 +49,23 @@ wss.on('connection', function connection(ws) {
         console.log(message);
         var data = JSON.parse(message);
         console.log(data.type);
-        console.log(data.command);
+        if (data.type == "web_client") {
+            console.log(data.command);
+            if (data.isEval) {
+                ws.send(message);
+            }
+        }
+        else if (data.type == "turtle_client") {
+            console.log(data.id);
+            if (data.name == null) {
+                // if a turtle does not have a name, assume it's a new turtle
+                turtle_ids[turtle_ids.length] = data.id;
+                var new_name = turtle_names[turtle_ids.length - 1];
+                var new_data = { type: "new_data", name: new_name };
+                ws.send(JSON.stringify(new_data));
+                console.log(JSON.stringify(new_data));
+            }
+        }
     });
 });
 (function () { return __awaiter(void 0, void 0, void 0, function () {
