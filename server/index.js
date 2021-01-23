@@ -38,6 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var ws_1 = require("ws");
 var ngrok_1 = require("ngrok");
+// tsc server/index.ts
+// node server/index.js
 var turtle_ids = [];
 //var turtles_connected = turtle_ids.length();
 var turtle_names = ["jake", "joe", "bill", "sally"];
@@ -52,6 +54,7 @@ wss.on('connection', function connection(ws) {
         if (data.type == "web_client") {
             console.log(data.command);
             if (data.isEval) {
+                // console.log(ws); // never do this -- it is illegible
                 ws.send(message);
             }
         }
