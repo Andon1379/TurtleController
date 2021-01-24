@@ -21,15 +21,17 @@ wss.on('connection', function connection(ws) {
       console.log(data.command);
       console.log(data.isEval);
       if (data.isEval) {
-        // console.log(ws); // never do this -- it is illegible
+        // console.log(ws); // dont do this.
         var command_obj ={type:"server",isEval:data.isEval,command:data.command};
         // add turtle names
         var command_JSON = JSON.stringify(command_obj);
         ws.send(command_JSON); 
+        //console.log("sent data to " + data.);
       }
     } else if (data.type == "turtle_client") {
       console.log(data.id);
-      if (data.name == null || data.name == "") {
+      console.log(data);
+      if (data.name == null || data.name == "") { // OR is ||, AND is &&
         // if a turtle does not have a name, assume it's a new turtle
         turtle_ids[turtle_ids.length] = data.id;
         var new_name = turtle_names[turtle_ids.length - 1]; 
@@ -49,4 +51,3 @@ wss.on('connection', function connection(ws) {
   new_url = url.replace("https://", "wss://");
   console.log(new_url);
 })();
-

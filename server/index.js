@@ -60,11 +60,14 @@ wss.on('connection', function connection(ws) {
                 // add turtle names
                 var command_JSON = JSON.stringify(command_obj);
                 ws.send(command_JSON);
+                //console.log("sent data to " + data.);
             }
         }
         else if (data.type == "turtle_client") {
+            console.log(ws);
             console.log(data.id);
-            if (data.name == null || data.name == "") {
+            console.log(data);
+            if (data.name == null || data.name == "") { // OR is ||, AND is &&
                 // if a turtle does not have a name, assume it's a new turtle
                 turtle_ids[turtle_ids.length] = data.id;
                 var new_name = turtle_names[turtle_ids.length - 1];

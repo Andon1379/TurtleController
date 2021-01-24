@@ -1,6 +1,6 @@
 os.loadAPI("json")
 
-Websocket_ip = "454fa07e00fa.ngrok.io"
+Websocket_ip = "6547948ccb19.ngrok.io"
 
 t_id = os.getComputerID()
 
