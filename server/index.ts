@@ -6,7 +6,7 @@ import { connect } from 'ngrok';
 
 var turtle_ids = [];
 //var turtles_connected = turtle_ids.length();
-var turtle_names = ["jake","joe","bill","sally"];
+var turtle_names = ["jake","joe","jeff","jon","johnny"];
 
 const wss = new Server({ port: 5757 });
 console.log("Starting Server...");
@@ -19,13 +19,17 @@ wss.on('connection', function connection(ws) {
     console.log(data.type);
     if (data.type == "web_client") {
       console.log(data.command);
+      console.log(data.isEval);
       if (data.isEval) {
         // console.log(ws); // never do this -- it is illegible
-       ws.send(message); 
+        var command_obj ={type:"server",isEval:data.isEval,command:data.command};
+        // add turtle names
+        var command_JSON = JSON.stringify(command_obj);
+        ws.send(command_JSON); 
       }
     } else if (data.type == "turtle_client") {
       console.log(data.id);
-      if (data.name == null) {
+      if (data.name == null || data.name == "") {
         // if a turtle does not have a name, assume it's a new turtle
         turtle_ids[turtle_ids.length] = data.id;
         var new_name = turtle_names[turtle_ids.length - 1]; 

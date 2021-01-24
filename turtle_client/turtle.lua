@@ -1,25 +1,25 @@
 os.loadAPI("json")
-local ws, err = http.websocket("db9fcbe68c86.ngrok.io")
-if err then
-  print(err)
-end
-if ws then
-  print("> Connected")
-  ws.send("")
-  while true do
-    local message = ws.receive()
-    print(message)
-    local obj = json.decode(message)
-    if obj.type == 'eval' then
-      Eval_cmd(obj.command)
-    --Send("hello")
-    end
-  end
-end
 
-function Send(text)
-  ws.send("tur_client: " + text)
-end
+Websocket_ip = "454fa07e00fa.ngrok.io"
+
+t_id = os.getComputerID()
+
+--Turtle_obj = {
+--  id = t_id;
+--  name = nil;
+--  rel_x = 0;
+--  rel_y = 0;
+--  rel_z = 0;
+--}
+--function Turtle_obj.create (self,id,name,x,y,z)
+--  self = Turtle_obj;
+--  self.id=os.getComputerID();
+--  self.name=name;
+--  self.rel_x = x;
+--  self.rel_y = y;
+--  self.rel_z = z;
+--  return self
+--end
 
 function Eval_cmd(command) 
 local func, err = load("return " + command)
@@ -33,5 +33,46 @@ local func, err = load("return " + command)
       end
   else 
       print("compilation error: ", err)
+  end
+end
+
+function New_name(name)
+  local a = {type="turtle_client",name=name,id=t_id,message="hi"}
+  local a_json = json.encode(a)
+  print(a_json)
+  return a_json
+end
+local ws, err = http.websocket(Websocket_ip)
+if err then
+  print(err)
+end
+if ws then
+  print("> Connected")
+  --local start_message = {type:'turtle_client'}
+  --ws.send("")
+  -- used for testing
+  local label = os.getComputerLabel()
+  print(label)
+  if label == "" then
+    ws.send(New_name(""))
+  elseif label == nil then
+    ws.send(New_name(""))
+  else
+    ws.send(New_name(label))
+  end
+  while true do
+    local message = ws.receive()
+    print(message)
+    local obj = json.decode(message)
+    print(obj)
+    if obj.type == 'eval' then
+      --Eval_cmd(obj.command)
+      print(obj)
+    --Send("hello")
+    end
+    if obj.type == 'new_data' then
+      print(obj)
+      os.setComputerLabel(obj.name)
+    end
   end
 end
