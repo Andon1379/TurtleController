@@ -52,7 +52,7 @@ wss.on('connection', function connection(ws) {
         console.log(message);
         var data = JSON.parse(message);
         console.log(data.type);
-        if (data.type == "web_client") {
+        if (data.type == "web_client") { // if is web client
             console.log(data.command);
             console.log(data.isEval);
             if (data.isEval) {

@@ -74,6 +74,13 @@ function writeToScreen_send(message) {
     output.insertAdjacentHTML("afterbegin", "<p id=sent>" + message + "</p>");
 }
 
+function send_exec(text) {
+    if (text != "") {
+        text && doSend("web", true, text);
+        sent_count++;
+    }
+    console.log(sent_count);
+}
 
 function name(text) {
     console.log(text);
