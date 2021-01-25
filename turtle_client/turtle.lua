@@ -1,6 +1,6 @@
 os.loadAPI("json")
 
-Websocket_ip = "6547948ccb19.ngrok.io"
+Websocket_ip = "c62cad6f3441.ngrok.io"
 
 t_id = os.getComputerID()
 
@@ -21,8 +21,9 @@ t_id = os.getComputerID()
 --  return self
 --end
 
-function Eval_cmd(command) 
-local func, err = load("return " + command)
+function Eval_cmd(command)
+  local a = "return " .. command 
+  local func, err = load(a)
   if func then 
       local ok, add = pcall(func)
       if ok then
@@ -63,16 +64,28 @@ if ws then
   while true do
     local message = ws.receive()
     print(message)
-    local obj = json.decode(message)
-    print(obj)
-    if obj.type == 'eval' then
-      --Eval_cmd(obj.command)
-      print(obj)
-    --Send("hello")
-    end
-    if obj.type == 'new_data' then
-      print(obj)
-      os.setComputerLabel(obj.name)
+    if message then  
+      local obj = json.decode(message)
+      print(obj.type)
+      if obj.type == 'eval' then
+        --Eval_cmd(obj.command)
+        print(obj)
+      --Send("hello")
+      elseif obj.type == 'new_data' then
+        print(obj)
+        os.setComputerLabel(obj.name)
+      elseif obj.type == 'server' then
+        if obj.isEval then
+          print(obj.isEval)
+          print(obj.command)
+          Eval_cmd(obj.command)
+        else
+          print(obj.command)
+          print(ob.isEval)
+        end
+      else
+        print("> Connection closed")
+      end
     end
   end
 end

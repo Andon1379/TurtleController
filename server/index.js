@@ -43,6 +43,7 @@ var ngrok_1 = require("ngrok");
 var turtle_ids = [];
 //var turtles_connected = turtle_ids.length();
 var turtle_names = ["jake", "joe", "jeff", "jon", "johnny"];
+var sender = "";
 var wss = new ws_1.Server({ port: 5757 });
 console.log("Starting Server...");
 wss.on('connection', function connection(ws) {
@@ -55,18 +56,24 @@ wss.on('connection', function connection(ws) {
             console.log(data.command);
             console.log(data.isEval);
             if (data.isEval) {
-                // console.log(ws); // never do this -- it is illegible
+                //console.log(ws._sender); // dont do this.
                 var command_obj = { type: "server", isEval: data.isEval, command: data.command };
                 // add turtle names
                 var command_JSON = JSON.stringify(command_obj);
-                ws.send(command_JSON);
-                //console.log("sent data to " + data.);
+                if (sender != "") {
+                    ws._sender = sender;
+                    ws.send(command_JSON);
+                    //console.log("sent data to " + data.);
+                }
+                else {
+                    console.log("'sender' is undefined");
+                }
             }
         }
         else if (data.type == "turtle_client") {
-            console.log(ws);
             console.log(data.id);
             console.log(data);
+            sender = ws._sender;
             if (data.name == null || data.name == "") { // OR is ||, AND is &&
                 // if a turtle does not have a name, assume it's a new turtle
                 turtle_ids[turtle_ids.length] = data.id;
@@ -85,7 +92,6 @@ wss.on('connection', function connection(ws) {
             case 0: return [4 /*yield*/, ngrok_1.connect(5757)];
             case 1:
                 url = _a.sent();
-                console.log(url);
                 new_url = url.slice(8, url.length);
                 console.log(new_url);
                 new_url = url.replace("https://", "wss://");

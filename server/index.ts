@@ -8,6 +8,8 @@ var turtle_ids = [];
 //var turtles_connected = turtle_ids.length();
 var turtle_names = ["jake","joe","jeff","jon","johnny"];
 
+var sender = ""
+
 const wss = new Server({ port: 5757 });
 console.log("Starting Server...");
 
@@ -17,20 +19,26 @@ wss.on('connection', function connection(ws) {
     console.log(message);
     var data = JSON.parse(message);
     console.log(data.type);
-    if (data.type == "web_client") {
+    if (data.type == "web_client") { // if is web client
       console.log(data.command);
       console.log(data.isEval);
       if (data.isEval) {
-        // console.log(ws); // dont do this.
+        //console.log(ws._sender); // dont do this.
         var command_obj ={type:"server",isEval:data.isEval,command:data.command};
         // add turtle names
         var command_JSON = JSON.stringify(command_obj);
-        ws.send(command_JSON); 
-        //console.log("sent data to " + data.);
+        if (sender != "") {
+          ws._sender = sender
+          ws.send(command_JSON); 
+          //console.log("sent data to " + data.);
+        } else {
+          console.log("'sender' is undefined");
+        }
       }
     } else if (data.type == "turtle_client") {
       console.log(data.id);
       console.log(data);
+      sender = ws._sender;
       if (data.name == null || data.name == "") { // OR is ||, AND is &&
         // if a turtle does not have a name, assume it's a new turtle
         turtle_ids[turtle_ids.length] = data.id;
@@ -45,7 +53,7 @@ wss.on('connection', function connection(ws) {
 
 (async () => {
   const url = await connect(5757);
-  console.log(url);
+  //console.log(url);
   var new_url = url.slice(8,url.length);
   console.log(new_url);
   new_url = url.replace("https://", "wss://");
