@@ -1,6 +1,6 @@
 os.loadAPI("json")
 
-Websocket_ip = "f3785e6e5047.ngrok.io"
+Websocket_ip = "b8a2267e4bc4.ngrok.io"
 os.setComputerLabel("")
 
 t_id = os.getComputerID()
@@ -28,26 +28,31 @@ function Eval_cmd(command)
   if func then 
       local ok, add = pcall(func)
       if ok then
-        -- additional code to run when func is run 
-        --print(ok)
+        -- additional code to run when func is run
+        return ok
       else
-          print("exec error: ", add)
+          --print("exec error: ", add)
+          return "exec error: " .. add
       end
   else 
-      print("compilation error: ", err)
+      --print("compilation error: ", err)
+      return "compilation error: " .. err
   end
 end
 
 function make_json(message)
   local name = os.getComputerLabel()
-  local a = {type="turtle_client",name="",id=t_id,message=message}
+  local fuelLevel = turtle.getFuelLevel()
+  local fuelLimit = turtle.getFuelLimit()
+  local slot = turtle.getSelectedSlot()
+  local a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
   if name == "" then
-    a = {type="turtle_client",name="",id=t_id,message=message}
+    a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
   elseif name == nil then
-    a = {type="turtle_client",name="",id=t_id,message=message}
+    a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
   else
-    a = {type="turtle_client",name=name,id=t_id,message=message}
-  end
+    a = {type="turtle_client",name=name,id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
+  end -- i do this because i cant seem to overwrite specific aspects of a file.
   print(a)
   local a_json = json.encode(a)
   --print(a_json)
@@ -79,9 +84,9 @@ if ws then
         os.setComputerLabel(obj.name)
       elseif obj.type == 'server' then
         if obj.isEval then
-          print(obj.isEval)
+          --print(obj.isEval)
           print(obj.command)
-          Eval_cmd(obj.command)
+          ws.send(Eval_cmd(obj.command))
         else
           print(obj.command)
           print(obj.isEval)

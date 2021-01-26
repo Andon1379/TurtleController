@@ -60,9 +60,10 @@ wss.on('connection', function connection(ws) {
                 if (data.turtle_id != "") {
                     if (data.turtle_id == "all") {
                         var i;
+                        console.log(turtle_ids);
                         for (i = 0; i < turtle_ids.length; i++) {
-                            console.log(i);
-                            console.log(turtle_ids[i]);
+                            //console.log(i);
+                            //console.log(turtle_ids[i]);
                             if (turtle_ids[i] != "" || turtle_ids[i] != null) {
                                 ws._sender = sender_turtle[turtle_ids[i]];
                                 ws.send(command_JSON);
@@ -93,6 +94,9 @@ wss.on('connection', function connection(ws) {
                 console.log(JSON.stringify(new_data));
                 ws.send(JSON.stringify(new_data));
             }
+        }
+        else {
+            console.log(message);
         }
     });
 });
