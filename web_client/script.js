@@ -4,7 +4,7 @@ var send = document.getElementById('send_id');
 var sent_count = 0; 
 
 var ws_url = document.getElementById('ws_url');
-let socket = new WebSocket(ws_url.value);
+var socket = new WebSocket(ws_url.value);
 
 connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + socket + "<br></p>");
 
@@ -21,13 +21,14 @@ function onClickButton_connect() {
         connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + ws_url.value + "<br></p>");
     } else {
         onClickButton_disconnect();
+        onClickButton_connect();
     }
     console.log(socket.url);
 }
 
-function doSend(client_name, is_eval, message) {
+function doSend(client_name, is_eval, message, id) {
     var client_type = "web_client"
-    var message_obj = {type:client_type, name:client_name, isEval:is_eval,command:message};
+    var message_obj = {type:client_type, name:client_name, isEval:is_eval,command:message,turtle_id:id};
     var JSON_message = JSON.stringify(message_obj);
     // sending things
     console.log('sent: %s', message);
@@ -58,10 +59,11 @@ function onClickButton_disconnect() {
 
 function onClickButton_send() {
     textarea = document.getElementById("send_id2");
+    turtle_id = document.getElementById("turtle_id")
     //var text = textarea.value;
     //var name = document.getElementById("username").value
     if (text != "") {
-        text && doSend("web", false, text);
+        text && doSend("web", false, text, turtle_id);
         sent_count++;
     }
     console.log(sent_count);
@@ -76,7 +78,7 @@ function writeToScreen_send(message) {
 
 function send_exec(text) {
     if (text != "") {
-        text && doSend("web", true, text);
+        text && doSend("web", true, text, "all");
         sent_count++;
     }
     console.log(sent_count);

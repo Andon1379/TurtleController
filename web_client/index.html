@@ -11,7 +11,14 @@
     <textarea cols=20 rows=6 id=ws_url></textarea>
     <button onclick="onClickButton_connect();">connect</button>
     <button onclick="onClickButton_disconnect();">disconnect</button>
-    <textarea cols=10 rows=3 id=username></textarea>
+    <p>
+        turtle id (buttons send to all, send button sends it to a specific turtle)
+    </p>
+    <textarea cols=10 rows=3 id=turtle_id></textarea>
+    
+    <p>
+        turtle commands
+    </p>
     <button onclick="send_exec('turtle.dig()');">mine</button>
     <button onclick="send_exec('turtle.forward()');">forward</button>
     <button onclick="send_exec('turtle.back()');">backward</button>

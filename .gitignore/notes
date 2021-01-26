@@ -16,6 +16,9 @@ run the lua in mc in a turtle
 turtle.lua: 
 https://pastebin.com/xSBnfhrW
 
+json library
+https://pastebin.com/4nRg9CHU
+
 https://gist.github.com/tylerneylon/59f4bcf316be525b30ab
 put this as a lua file called json.lua
 then do os.loadAPI("json.lua")
