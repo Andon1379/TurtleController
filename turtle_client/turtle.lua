@@ -1,6 +1,7 @@
 os.loadAPI("json")
 
-Websocket_ip = "c62cad6f3441.ngrok.io"
+Websocket_ip = "f3785e6e5047.ngrok.io"
+os.setComputerLabel("")
 
 t_id = os.getComputerID()
 
@@ -27,8 +28,8 @@ function Eval_cmd(command)
   if func then 
       local ok, add = pcall(func)
       if ok then
-          -- additional code to run when func is run 
-        
+        -- additional code to run when func is run 
+        --print(ok)
       else
           print("exec error: ", add)
       end
@@ -37,12 +38,22 @@ function Eval_cmd(command)
   end
 end
 
-function New_name(name)
-  local a = {type="turtle_client",name=name,id=t_id,message="hi"}
+function make_json(message)
+  local name = os.getComputerLabel()
+  local a = {type="turtle_client",name="",id=t_id,message=message}
+  if name == "" then
+    a = {type="turtle_client",name="",id=t_id,message=message}
+  elseif name == nil then
+    a = {type="turtle_client",name="",id=t_id,message=message}
+  else
+    a = {type="turtle_client",name=name,id=t_id,message=message}
+  end
+  print(a)
   local a_json = json.encode(a)
-  print(a_json)
+  --print(a_json)
   return a_json
 end
+
 local ws, err = http.websocket(Websocket_ip)
 if err then
   print(err)
@@ -54,25 +65,17 @@ if ws then
   -- used for testing
   local label = os.getComputerLabel()
   print(label)
-  if label == "" then
-    ws.send(New_name(""))
-  elseif label == nil then
-    ws.send(New_name(""))
-  else
-    ws.send(New_name(label))
-  end
+  
+  ws.send(make_json("computer label test"))
+
   while true do
     local message = ws.receive()
     print(message)
     if message then  
       local obj = json.decode(message)
       print(obj.type)
-      if obj.type == 'eval' then
-        --Eval_cmd(obj.command)
-        print(obj)
-      --Send("hello")
-      elseif obj.type == 'new_data' then
-        print(obj)
+      if obj.type == 'new_data' then
+        --print(obj)
         os.setComputerLabel(obj.name)
       elseif obj.type == 'server' then
         if obj.isEval then
@@ -81,7 +84,7 @@ if ws then
           Eval_cmd(obj.command)
         else
           print(obj.command)
-          print(ob.isEval)
+          print(obj.isEval)
         end
       else
         print("> Connection closed")
