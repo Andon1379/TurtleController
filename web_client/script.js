@@ -1,7 +1,7 @@
 var output = document.querySelector("#output"),
-    connected = false;
-var send = document.getElementById('send_id');
-var sent_count = 0; 
+    connected = false,
+    send = document.getElementById('send_id'),
+    sent_count = 0; 
 
 var ws_url = document.getElementById('ws_url');
 var socket = new WebSocket(ws_url.value);
@@ -19,13 +19,14 @@ function onClickButton_connect() {
         connected = true;
         cnd_2.remove();
         connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + ws_url.value + "<br></p>");
+        // inital message
+        doSend("web",false,'inital_msg',null);
     } else {
         onClickButton_disconnect();
         onClickButton_connect();
     }
     console.log(socket.url);
 }
-
 function doSend(client_name, is_eval, message, id) {
     var client_type = "web_client"
     var message_obj = {type:client_type, name:client_name, isEval:is_eval,command:message,turtle_id:id};
@@ -35,6 +36,7 @@ function doSend(client_name, is_eval, message, id) {
     writeToScreen_send("SENT: " + message);
     socket.send(JSON_message);
 }
+
 
 function onClickButton_disconnect() {
     var output = document.getElementById('out_id');
@@ -59,14 +61,14 @@ function onClickButton_disconnect() {
 
 function onClickButton_send() {
     textarea = document.getElementById("send_id2");
-    turtle_id = document.getElementById("turtle_id")
-    //var text = textarea.value;
+    turtle_id = document.getElementById("turtle_id");
+    var text = textarea.value;
     //var name = document.getElementById("username").value
     if (text != "") {
         text && doSend("web", false, text, turtle_id);
         sent_count++;
     }
-    console.log(sent_count);
+    //console.log(sent_count);
     textarea.value = "";
     textarea.focus();
 }
@@ -86,4 +88,7 @@ function send_exec(text) {
 
 function name(text) {
     console.log(text);
+}
+
+socket.onopen = function() { 
 }

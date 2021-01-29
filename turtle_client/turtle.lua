@@ -1,26 +1,8 @@
 os.loadAPI("json")
 
-Websocket_ip = "b8a2267e4bc4.ngrok.io"
+Websocket_ip = "1e4449834150.ngrok.io"
 os.setComputerLabel("")
-
 t_id = os.getComputerID()
-
---Turtle_obj = {
---  id = t_id;
---  name = nil;
---  rel_x = 0;
---  rel_y = 0;
---  rel_z = 0;
---}
---function Turtle_obj.create (self,id,name,x,y,z)
---  self = Turtle_obj;
---  self.id=os.getComputerID();
---  self.name=name;
---  self.rel_x = x;
---  self.rel_y = y;
---  self.rel_z = z;
---  return self
---end
 
 function Eval_cmd(command)
   local a = "return " .. command 
@@ -29,7 +11,9 @@ function Eval_cmd(command)
       local ok, add = pcall(func)
       if ok then
         -- additional code to run when func is run
-        return ok
+        --return ws.send(make_json(ok))
+        print(ok)
+        return add
       else
           --print("exec error: ", add)
           return "exec error: " .. add
@@ -41,22 +25,43 @@ function Eval_cmd(command)
 end
 
 function make_json(message)
+  -- derfine vars
   local name = os.getComputerLabel()
   local fuelLevel = turtle.getFuelLevel()
   local fuelLimit = turtle.getFuelLimit()
-  local slot = turtle.getSelectedSlot()
-  local a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
-  if name == "" then
-    a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
-  elseif name == nil then
-    a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
+  -- inventory
+  local inventory = {}
+  inventory.selectedSlot = turtle.getSelectedSlot()
+  inventory.slots = {}
+  for i = 16,1,-1 do -- max,min,increment
+    if type(turtle.getItemDetail(i)) == "table" then
+      --print("is table")
+      local item = turtle.getItemDetail(i)
+      i_str = tostring(i)
+      inventory.slots[i_str] = {}
+      inventory.slots[i_str].name = tostring(item.name)
+      inventory.slots[i_str].count = tostring(item.count)
+      --print(inventory.slots[i_str].name)
+      --print(inventory.slots[i_str].count)
+      --print(json.encode(inventory.slots))
+    end
+  end
+  --print(inventory)
+  -- rest of needed data
+  local a = {type="turtle_client",name="",id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,inventory=inventory}
+  if name == "" or name == nil then
+    a.name = ""
   else
-    a = {type="turtle_client",name=name,id=t_id,message=message,fuelLevel=fuelLevel,fuelLimit=fuelLimit,slot=slot}
-  end -- i do this because i cant seem to overwrite specific aspects of a file.
-  print(a)
+    a.name = name
+  end
+  --print(a)
   local a_json = json.encode(a)
   --print(a_json)
   return a_json
+end
+
+function send(this, message)
+  this.send(make_json(message))
 end
 
 local ws, err = http.websocket(Websocket_ip)
@@ -85,8 +90,9 @@ if ws then
       elseif obj.type == 'server' then
         if obj.isEval then
           --print(obj.isEval)
-          print(obj.command)
-          ws.send(Eval_cmd(obj.command))
+          --print(obj.command)
+          --ws.send(Eval_cmd(obj.command))
+          send(ws,Eval_cmd(obj.command))
         else
           print(obj.command)
           print(obj.isEval)

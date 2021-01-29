@@ -1,5 +1,8 @@
 to compile .ts files:
-tsc <file>.ts
+tsc <file>.ts --downlevelIteration 
+
+note to self: get it to recognize tsconfig.json
+
 to run the resulting .js file
 node <file>.js
 
