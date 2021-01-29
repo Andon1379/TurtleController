@@ -1,5 +1,5 @@
 to compile .ts files:
-tsc <file>.ts --downlevelIteration 
+tsc --project server/tsconfig.json
 
 note to self: get it to recognize tsconfig.json
 
