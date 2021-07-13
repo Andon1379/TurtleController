@@ -4,9 +4,18 @@ import { connect } from 'ngrok';
 // tsc server/index.ts
 // node server/index.js
 
+// save to file occasionally, then read from file when server starts
+// make a cookie on a connection with a uuid, store that in the web client's cookies, and use it as a refrence to find needed information
+// js fetch funtion -- use it to ask for information recived from the turtle
+
+// use http protocol instead of websockets for web client 
+//    fetch funtion -> get & / or post request? 
+
+// if using ngrok to make a connection w/ websockets and HTPP Protocol, which one is using the one availible link? 
+
 var turtle_ids = [];
 //var turtles_connected = turtle_ids.length();
-var turtle_names = ["jake","joe","jeff","jon","jonny","james","jonathan"];
+var turtle_names = ["jake","joe","jeff","jon","jonny","james","jonathan"]; // turtle names and titles, randomly choose from one of each 
 
 var sender_turtle = [],
     sender_web = [],
@@ -61,27 +70,31 @@ wss.on('connection', function connection(ws) {
         }
       }
     } else if (data.type == "turtle_client") {
-      console.log(data);
-      //console.log(data.turtle_id); // -- turtle_id is not part of data !! 
-      sender_turtle[sender_turtle.length] = ws._sender;
-      //sender_turtle = deleteDuplicates(sender_turtle); 
-      turtle_ids[turtle_ids.length] = data.id;
-      //turtle_ids = deleteDuplicates(turtle_ids);
-      for (var i = 0; i < 15; i++) {
-        if (data.inventory.slots[i] != null){
-          console.log(data.inventory.slots[i]);
-        }
-      }
-      if (data.name == null || data.name == "") { // OR is ||, AND is &&
-        // if a turtle does not have a name, assume it's a new turtle
-        var new_name = turtle_names[data.id]; 
-        var new_data = {type:"new_data",name:new_name,id:data.id}
-        console.log(JSON.stringify(new_data));
-        ws.send(JSON.stringify(new_data));
-      }
+        console.log(data);
+        //console.log(data.turtle_id); // -- turtle_id is not part of data !! 
+        sender_turtle[sender_turtle.length] = ws._sender;
+        //sender_turtle = deleteDuplicates(sender_turtle); 
+        if (data.name == null || data.n ) {
+          // make a cookie on a connection with a uuid, store that in the web client's cookies, and use it as a refrence to find needed information
+          // js fetch funtion -- use it to ask for information recived from the turtlelength; i++) {
+          if (data.id != turtle_ids[i]) {
+          turtle_ids[turtle_ids.length] = data.id;
+          };
+        };
+        //turtle_ids = deleteDuplicates(turtle_ids);
+        for (var i = 0; i < 15; i++) {
+          if (data.inventory.slots[i] != null){
+            console.log(data.inventory.slots[i]);
+          };
+        };
+        for (var i = 0; i < web_num; i++) {
+          console.log(sender_web[i]);
+          ws._sender = sender_web[i];
+          ws.send(data);
+        };
     } else {
       console.log(message)
-    }
+    };
   });
 });
 
