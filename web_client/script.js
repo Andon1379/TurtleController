@@ -3,15 +3,15 @@ var output = document.querySelector("#output"),
     send = document.getElementById('send_id'),
     sent_count = 0; 
 
-var socket = new WebSocket(document.getElementById('ws_url').value);
-
-socket.onmessage = function(event) {
-    console.log(event);
-};
-
-connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + socket + "<br></p>");
-
 function onClickButton_connect() {
+    window.socket = new WebSocket(document.getElementById("ws_url").value);
+    
+    window.socket.onmessage = function(event) {
+        console.log(event);
+    };
+
+    connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + socket + "<br></p>");
+
     var cnd_2 = document.getElementById('cnd_stat_2');
     if (connected == false) {
         // socket connections
@@ -99,15 +99,26 @@ function send_exec(text) {
 function name(text) {
     console.log(text);
 };
-function init_msg() {
-    var message_obj = {type:"web_client", name:"web", isEval:false,command:"inital_msg",turtle_id:'all'};
-    console.log(message_obj);
-    if (socket) {
-        socket.send(JSON.stringify(message_obj));
-    } else {
-        setTimeout(init_msg, 300); // no clue how long this should be
-    }
-    
-};
-socket.onopen = function() { 
-};
+// let msgTimeout = 0
+// async function init_msg() {
+//     if (msgTimeout >= 30) {
+//         socket.close()
+//     }
+//     if (socket.readyState != 1) {
+//         setTimeout(() => {
+//             msgTimeout++
+//             init_msg()
+//         }, 1000); 
+//     } else {
+//         var message_obj = {type:"web_client", name:"web", isEval:false,command:"inital_msg",turtle_id:'all'};
+//         console.log(message_obj);
+//         console.log("Connected")
+//         if (socket) {
+//             socket.send(JSON.stringify(message_obj));
+//         } else {
+//             setTimeout(init_msg, 300); // no clue how long this should be
+//         }
+//     }
+// };
+// socket.onopen = function() { 
+// };

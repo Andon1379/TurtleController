@@ -1,6 +1,6 @@
 {
   "name": "turtle",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "ComputerCraft Turtle websocket project",
   "main": "index.ts",
   "scripts": {
@@ -8,16 +8,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "null"
+    "url": "https://github.com/Andon1379/TurtleController"
   },
   "author": "Andon1379",
+  "contributors": [
+    {
+      "name": "waterwolf9910",
+      "url": "https://waterwolfies.com"
+    }
+  ],
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.14.0",
-    "@typescript-eslint/parser": "^4.14.0",
+    "@types/express": "^4.17.13",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
     "eslint": "^7.18.0"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "ngrok": "^4.0.1"
   }
 }
