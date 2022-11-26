@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <script src="./howTo.js"></script>
+  <!--<style href="./howTo.css"></style>-->
+  <link href="howTo.css" rel="stylesheet" type="text/css" />
+  <head>
+    <title>How To Use: TurtleController</title>
+  </head>
+  <body>
+    <div class="sidenav">
+      <a href="#Intro">Intro</a>
+      <a href="#moveR">Moving the robot</a>
+      <a href="#moveC">Moving the viewpoint</a>
+      <a href="#fuel">Fuel counter and robot switcher</a>
+      <a href="#inv">Inventory</a>
+      <a href="#key">Keyboard Controls</a>
+      <a href="#todo">To do</a>
+      <a href="./index.html">==> Back</a>
+    </div>
+    <div class="main">
+      <h1 id="Intro">How to use: TurtleController</h1>
+      Welcome to my project! If you're here, you're probably wondering what this is and how it works. This is a project of mine that allows you to control robots from a minecraft mod called ComputerCraft from outside of the game.
+      In this page, I will explain how to effectively use this project.
+      <br>
+      Please note that anything in <unfinished>red</unfinished> is marked as unfinished, and will be implemented soon. Additionally, anytime this website mentions a turtle, it is referring to a robot.  
+      <br><br>
+      When the webpage is loaded up, it should prompt you for a link to the server it will connect to. This link is <u>not</u> the link to the minecraft server, it is a different server entierly. The way this project works is that there is server software availible on the <unfinished><a href="" onclick="console.log('this doesnt work')">Github repository</a></unfinished> that you can download, run with node.js, and connect to. It will give you the correct server link in the console. If, for whatever reason, the window that this software/terminal is running in closes, the server will shutdown.  
+      <h2 id="moveR">Moving the robot</h2>
+      In order to move the robot, you can utilize the 6 buttons in the bottom - left corner. These buttons will move the <a href="#fuel">selected robot</a> up, down, forward, and backward, as well as turning it left and right. There are also keyboard commands that can be found <a href="#key">here<a>.
+      The world that this program will display will be populated by the blocks that the robot discovers. For example, if I move my robot over a block of stone, that block of stone will show up in the display on the website. The color of the blocks made will be based on the block id, meaning that all stone will be the same color, but may not be the gray texture we all know and love. The robot will be able to see the block in front of it, above it, and below it. 
+      You can hover over the cubes with your mouse to see what block they represent.
+      <h2 id="moveC">Moving the viewpoint</h2>
+      The viewpoint, or camera, or bit-that-shows-you-what-you-are-looking-at, or whatever you want to call it, can be moved by clicking and dragging on anywhere that isn't the control panels. You can also change the level of zoom (how far you are zoomed in) with the scroll wheel.
+      <h2 id="fuel">Fuel counter and robot switcher</h2>
+      The fuel counter and robot switcher will show up in the top left corner. The fuel display will fill in based on how much fuel the robot has, versus the fuel limit it has. It will also change color based on specific thresholds, but you're probably ok if you are in the yellow for fuel.
+      The robot switcher is a set of buttons made to swap control of the robots connected to the aformentioned server, with a few specfied numbers related to that information. They should show up in order of connection, and the id number will always start at 0, whereas the number of connected robots always should start at 1. When switching robots, the camera will aslo move with you, bringing with it the same offset that you were viewing the old robot with, and updating the fuel and inventory display.
+      <h2 id="inv">Inventory</h2>
+      The inventory display is the 4x4 grid of boxes in the bottom right corner. It will show you the amount of items in the slots of the robot, and, on a right click, will show you the id/name of the item, <unfinished>as well as any actions that you can do with it</unfinished>, such as equipping it, placing it, throwing it, etc.
+      The discolored, lighter square is the <u>currently selected slot</u>. <unfinished>A planned addition to this is an area that tells you what item the robot has equipped, if anything.</unfinished> 
+      <h2 id="key">Keyboard Controls</h2>
+      This program also accepts some keyboard controls. They are as follows: 
+      <table class="keyTable">
+        <tr>
+          <th>Up Arrow and W</th>
+          <th>Moves current robot forward</th>
+        </tr>
+        <tr>
+          <th>Down Arrow and S</th>
+          <th>Moves current robot backward</th>
+        </tr>
+        <tr>
+          <th>Left Arrow and A</th>
+          <th>Turns current robot left</th>
+        </tr>
+        <tr>
+          <th>Right Arrow and D</th>
+          <th>Turns current robot right</th>
+        </tr>
+        <tr>
+          <th> > (or period) </th>
+          <th>Changes to next turtle, if possible</th>
+        </tr>
+        <tr>
+          <th> < (or comma) </th>
+          <th>Changes to previous turtle, if possible</th>
+        </tr>
+        <tr>
+          <th> Space </th>
+          <th>Moves current robot up</th>
+        </tr>
+        <tr>
+          <th> Left Shift </th>
+          <th>Moves current robot down</th>
+        </tr>
+        <!--<tr>
+          <th></th>
+          <th></th>
+        </tr> -->
+      </table>
+      <br>
+      <h2 id="todo">To Do:</h2>
+      Some things that I plan to fix are the inventory, fuel, id display, and camera position updating on the first time one switches robots.  
+      <br>
+      <a href="./index.html">==> Back</a>
+    </div>
+  </body>
+</html>

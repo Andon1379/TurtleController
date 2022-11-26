@@ -1,0 +1,123 @@
+* {
+	margin: 0px;
+	border: 0px;
+	padding: 0px;
+  box-sizing: border-box; 
+  z-index: 1;
+}
+
+button {
+  background-color: #333333; 
+  border-color: #444444;
+  border: 2px solid;
+  padding: 3px;
+  font-size: 12;
+  color: #777777;
+  position: absolute;
+  display: inline-block;
+}
+
+
+
+.connectBtn {
+  position: relative;
+  display: inline;
+  background-color: white;
+  border-color: white;
+  color: black;
+}
+
+.topL {
+  background-color: #333333; 
+  border-color: #444444;
+  color: #777777;
+  border: 2px solid;
+  position: absolute;
+  display: inline-block;
+  left: 0px;
+  top: 0px;
+}
+
+
+
+/* Context menu */
+*::before { box-sizing: border-box; }
+*::after { box-sizing: border-box; }
+.context-menu {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  color: #777777;
+  background-color: #444444;
+  border: 2px;
+  text-align: left;
+  white-space: nowrap;
+  /* text-indent: 4px; */
+}
+.context-menu-item {
+  color:#777;
+  background-color: #444;
+  border-top: 2px groove #555;
+  text-indent: 0px;
+  white-space: normal;
+}
+.context-menu--active {
+  display: block;
+}
+
+.noSelect {
+  user-select: none;
+}
+
+
+/* inv */
+.inv {
+  color: #777777;
+  position: absolute;
+  right: 8px;
+  bottom: 1%;
+  background-color: #222222;
+}
+.invCell {
+  padding: 4px;
+  border: 2px solid #333333;
+  background-color: #222222;
+  width: 30px;
+  height: 30px;
+  table-layout: fixed;
+  white-space: pre-line;
+  text-align: center;
+}
+
+/* howTo */
+.howTo {
+  right:3%;
+  top:1%;
+  display: inline-block;
+  position: absolute;
+}
+
+.howTo a:link {
+  text-decoration: none;
+  color:#777777;
+  background-color:#333333;
+  font-size: 20px;
+}
+.howTo a:visited {
+  text-decoration: none;
+  color:#777777;
+  background-color:#333333;
+  font-size: 20px;
+}
+.howTo a:hover {
+  text-decoration: none;
+  color:#777777;
+  background-color:#333333;
+  font-size: 20px;
+}
+.howTo a:active {
+  text-decoration: none;
+  color:#777777;
+  background-color:#333333;
+  font-size: 20px;
+}

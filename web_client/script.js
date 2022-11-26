@@ -1,124 +1,130 @@
-var output = document.querySelector("#output"),
-    connected = false,
-    send = document.getElementById('send_id'),
-    sent_count = 0; 
+import { get_req, start, end, url, changeUrl, send, socket } from "./modules/comms.js"
+import { makeUi } from "./modules/gui.js"
+import { focusNewTurt, handleTurtChange } from "./modules/msc.js"
+import { moveTurtle } from "./modules/motion.js"
 
-function onClickButton_connect() {
-    window.socket = new WebSocket(document.getElementById("ws_url").value);
+// https://developer.mozilla.org/en-US/docs/Web/API/EventSource
+// https://developer.mozilla.org/en-US/docs/Web/API/fetch
+
+export let renderedObjects = [];
+export function setRenderedObjects(a) {
+  renderedObjects = a;
+}
+
+window.setUrl = function() {
+  changeUrl("")
+  let newUrl = document.getElementById("inLink").value
+  let endUrl = newUrl.slice(-1)
+  if (newUrl.slice(-12) == "/web_client/") { newUrl.substring(0, newUrl.length-1) } // am i acually changing the url here?
+  else if (newUrl.slice(-11) == "/web_client") {changeUrl(newUrl)}
+  else if (endUrl == "/") { changeUrl(newUrl+"web_client") }
+  else { changeUrl(newUrl+"/web_client") }
+  console.log(url);
+
+  
+  get_req(url).then(res => {
+    // initial request -- get preliminmary info
+    for (let i = 0; i < document.getElementsByClassName("toConnect").length; i++) {
+      document.getElementsByClassName("toConnect")[i].hidden = true;
+    }
+
+    let activeElements = document.getElementsByClassName("active")
+    for (let i = 0; i < activeElements.length; i++) {
+      activeElements[i].hidden = false;
+    }
+
+    addListeners()
+
+    makeUi()
+
+    let timeout 
+    function a() {
+      if (res.list.length > 0) {
+        renderedObjects = focusNewTurt(res.list, 0, []);
     
-    window.socket.onmessage = function(event) {
-        console.log(event);
-    };
-
-    connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + socket + "<br></p>");
-
-    var cnd_2 = document.getElementById('cnd_stat_2');
-    if (connected == false) {
-        // socket connections
-        var socket = new WebSocket(document.getElementById('ws_url').value);
-        
-        send.insertAdjacentHTML("afterbegin", "<textarea cols=60 rows=6 id='send_id2'></textarea><button onclick='onClickButton_send();' id='send_id3'>send</button>");
-        connected = true;
-        cnd_2.remove();
-        connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + ws_url.value + "<br></p>");
-        // inital message
-        //doSend("web",false,'inital_msg','all');
-        init_msg();
-    } else {
-        onClickButton_disconnect();
-        onClickButton_connect();
+        // WS 
+        let wsUrl = (url.startsWith('wss://') ? url + "/0": "wss://" + url.slice( (url.length * -1) + 8 ) + "/0")
+        console.log(wsUrl)
+        start(wsUrl);
+      } else {
+        let wsUrl = (url.startsWith('wss://') ? url : "wss://" + url.slice( (url.length * -1) + 8 ))
+        start(wsUrl, (resT)=>{
+          //console.log(resT)
+          if (resT.list.length > 0) {
+            res = resT
+            a()
+          } else {
+            //console.log("b")
+            clearTimeout(timeout)
+            timeout = setTimeout( ()=>{
+              //console.log("a");
+              send(socket, {a:"a"});
+              // test object
+              return undefined;
+            }, 60)
+          }
+        });
+        send(socket, {a:"a"})
+      }
     }
-    console.log(socket.url);
-}
-function doSend(client_name, is_eval, message, id) {
-    var client_type = "web_client"
-    var message_obj = {type:client_type, name:client_name, isEval:is_eval,command:message,turtle_id:id};
-    var JSON_message = JSON.stringify(message_obj);
-    // sending things
-    if (socket != null) {
-        console.log(message_obj);
-        writeToScreen_send("SENT: " + message);
-        socket.send(JSON_message);
-    } else {
-        console.error("socket object is undefined.");
-    };
+    a()
+    
+  }).catch(err => { console.log(err) })
 }
 
-function onClickButton_disconnect() {
-    var output = document.getElementById('out_id');
-    var send3 = document.getElementById('send_id3'); 
-    var send2 = document.getElementById('send_id2'); // very creative, i know
-    var cnd_2 = document.getElementById('cnd_stat_2'); // connected status 2
-    if (connected == true) {
-        //send2.remove();
-        if (send3 != null ) { 
-            send3.remove()
-        };
-        if (cnd_2 != null) {
-            cnd_2.remove();
-        };
-        sent_count = 0;
-        output.remove();
-        send.insertAdjacentHTML("afterend", "<div class=output id=out_id></div>");
-        // disconnect from websocket
-        socket.close();
-        connected_status.insertAdjacentHTML("afterbegin", "<p id=cnd_stat_2>connected to: " + "" + "<br></p>");
-        connected = false;
-        //connected_status.insertAdjacentHTML("afterbegin", "connected to: " + "" + "<br>");
+//document.getElementById("setlink").addEventListener("click", ()=> { window.setUrl() })
+
+
+function addListeners() {
+
+  window.getReq = function () {
+    get_req(url)
+      .then(res => { log(`res: ${JSON.stringify(res)}`); })
+      .catch(err => { console.log( err ) });
+  }
+  document.getElementById("forward").addEventListener("click", ()=> { moveTurtle("forward") })
+  document.getElementById("backward").addEventListener("click", ()=> { moveTurtle("backward") })
+  document.getElementById("up").addEventListener("click", ()=> { moveTurtle("up") })
+  document.getElementById("down").addEventListener("click", ()=> { moveTurtle("down") })
+  document.getElementById("left").addEventListener("click", ()=> { moveTurtle("left") })
+  document.getElementById("right").addEventListener("click", ()=> { moveTurtle("right") })
+  document.getElementById("shiftPos").addEventListener("click", async () => { 
+    //console.log(renderedObjects)
+    renderedObjects = await handleTurtChange(1, renderedObjects);
+    //console.log("a", renderedObjects);
+  })
+  document.getElementById("shiftNeg").addEventListener("click", async () => {
+    //console.log(renderedObjects)
+    renderedObjects = await handleTurtChange(-1, renderedObjects);
+    //console.log("a", renderedObjects);
+  })
+
+  document.addEventListener("keydown", dothing);
+  async function dothing(e) {
+    if (e.code == "ArrowUp" || e.code == "KeyW") { moveTurtle("forward"); }
+    else if (e.code == "ArrowDown" || e.code == "KeyS") { moveTurtle("backward"); }
+    else if (e.code == "ArrowLeft" || e.code == "KeyA") { moveTurtle("left"); }
+    else if (e.code == "ArrowRight" || e.code == "KeyD") { moveTurtle("right"); }
+    else if (e.code == "ShiftLeft") { moveTurtle("down"); }
+    else if (e.code == "Space") { moveTurtle("up"); }
+    else if (e.code == "KeyT") { 
+      var curTime = new Date()
+      //console.log(curTime.toString())
+      console.log(`[${curTime.getHours()}:${curTime.getMinutes()}]: ${renderedObjects}`)//${req.method} at ${req.baseUrl}`)
+      
     }
-    //console.log(socket)
+    else if (e.code == "Period") { 
+      //console.log(handleTurtChange(0,renderedObjects))
+      //console.log(renderedObjects)
+      renderedObjects = await handleTurtChange(1, renderedObjects);
+      //console.log("a", renderedObjects) 
+    }
+    else if (e.code == "Comma") { 
+      //console.log(handleTurtChange(0,renderedObjects))
+      //console.log(renderedObjects)
+      renderedObjects = await handleTurtChange(-1, renderedObjects); 
+      //console.log("a", renderedObjects)
+    }
+    //else {console.log("Unhandled keypress: " + e.code)};
+  }
 }
-
-function onClickButton_send() {
-    textarea = document.getElementById("send_id2");
-    turtle_id = document.getElementById("turtle_id");
-    var text = textarea.value;
-    //var name = document.getElementById("username").value
-    if (text != "") {
-        text && doSend("web", false, text, turtle_id);
-        sent_count++;
-    }
-    //console.log(sent_count);
-    textarea.value = "";
-    textarea.focus();
-};
-
-function writeToScreen_send(message) {
-    var output = document.getElementById('out_id');
-    output.insertAdjacentHTML("afterbegin", "<p id=sent>" + message + "</p>");
-};
-
-function send_exec(text) {
-    if (text != "") {
-        text && doSend("web", true, text, "all");
-        sent_count++;
-    };
-    console.log(sent_count);
-};
-
-function name(text) {
-    console.log(text);
-};
-// let msgTimeout = 0
-// async function init_msg() {
-//     if (msgTimeout >= 30) {
-//         socket.close()
-//     }
-//     if (socket.readyState != 1) {
-//         setTimeout(() => {
-//             msgTimeout++
-//             init_msg()
-//         }, 1000); 
-//     } else {
-//         var message_obj = {type:"web_client", name:"web", isEval:false,command:"inital_msg",turtle_id:'all'};
-//         console.log(message_obj);
-//         console.log("Connected")
-//         if (socket) {
-//             socket.send(JSON.stringify(message_obj));
-//         } else {
-//             setTimeout(init_msg, 300); // no clue how long this should be
-//         }
-//     }
-// };
-// socket.onopen = function() { 
-// };
