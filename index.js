@@ -232,7 +232,7 @@ async function run() {
     var curTime = new Date()
     let curMin = (curTime.getHours()*60)+curTime.getMinutes()
     console.log(`[${(curMin - (curMin % 60) )/ 60}:${curMin%60}]: ${req.method} at ${req.originalUrl}`)
-    console.log("Body:", req.body)
+    //console.log("Body:", req.body)
     next()
   })
 

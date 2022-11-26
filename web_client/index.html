@@ -35,6 +35,9 @@
     <div class="toConnect">
       Enter link to server: 
       <input id="inLink" value=""></input>
+      <script>
+        document.getElementById("inLink").value = window.location.href;
+      </script>
       <button class="connectBtn" id="setLink" onclick="window.setUrl();"> connect </button>
     </div>
     <div class="active" hidden>
