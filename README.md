@@ -25,6 +25,8 @@ This can be done by running `./turtle.lua` in the turtle's console, and then typ
 
 __Please Note:__ The url inputted needs to be of either `http://` or `https://`.
 
+***PLEASE NOTE:*** The program, in it's current form, does not work if you try to move a robot without fuel. Please add fuel to your turtles before moving them.
+
 
 
 If you have any feedback, do not hesitate to make a new issue or a fork. I would love to collaborate with other people on this.

@@ -53,6 +53,6 @@ export function turtUpdater(turtObj) {
   setCs_curTurtVisual(rendered[0]);
   setRenderedObjects(rendered);
 
-  rotate(cs_curTurtVisual, makeRadian(turtObj.turn * -90 ));
+  rotate(cs_curTurtVisual, makeRadian( (turtObj.turn == 1 || turtObj.turn == 3) ? turtObj.turn * 90 : turtObj.turn * -90 ));
   cTarget(cs_curTurtVisual, oldObj);
 }

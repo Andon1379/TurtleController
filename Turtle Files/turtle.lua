@@ -69,6 +69,8 @@ function make_packet(message)
   blocks.up.sucess, blocks.up.data = turtle.inspectUp()
   blocks.front.sucess, blocks.front.data = turtle.inspect()
   blocks.down.sucess, blocks.down.data = turtle.inspectDown()
+  --print(message)
+  --if type(message)=="table" then for k,v in pairs(message) do print( k,v ) end end
   local a = {type="turtle_client",name="",SG_id = SG_id, id=t_id,message=message,fuel=fuel,inventory=inventory,blocks=blocks} 
   if name == "" or name == nil then
     a.name = "Default Name"
@@ -160,6 +162,7 @@ function Start() --- add SG_id to the settings file
     local reason
     wsUrl = base_wsUrl.."/turtle/"..SG_id
     ws, reason = http.websocket(wsUrl)
+    --print(wsUrl)
     if ws == false then
       print("Websocket connection failed: "..reason)
     end
@@ -216,6 +219,7 @@ function Start() --- add SG_id to the settings file
             data.rMsg = command_OUT
           end
         end
+        --print(data.rMsg)
         --print(textutils.serializeJSON(make_packet(data)))
         local packet = make_packet(data)
         ws.send(textutils.serializeJSON(packet))

@@ -389,7 +389,7 @@ async function run() {
         turtList[id].message.isDone = data.message.isDone;
         turtList[id].message.times = data.message.times;
         
-        if(turtList[id].message.isDone === true) {
+        if(turtList[id].message.isDone === true && data.message.rMsg === true) {
           turtList[id].moveTurt(turtList[id].message.message);
 
           if (turtList[id].message.isRepeat == false) {
@@ -567,7 +567,7 @@ async function run() {
       turtList[id].message.isDone = data.message.isDone;
       turtList[id].message.times = data.message.times;
       
-      if(turtList[id].message.isDone === true && data.message.message !== "") {
+      if(turtList[id].message.isDone === true && data.message.rMsg === true && data.message.message !== "") {
         //console.log(data.message);
         // handle messages and commands that have been run
 
