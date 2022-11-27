@@ -246,7 +246,7 @@ export function makeUi() {
   
   // baseLine
   dwnEle.style.left = (window.innerWidth / 100) + 'px'
-  rEle.style.left = (window.innerWidth / 100) + 'px'
+  lEle.style.left = (window.innerWidth / 100) + 'px'
   upEle.style.left = (window.innerWidth / 100) + 'px'
   dwnEle.style.bottom = (window.innerHeight / 100) + 'px' 
   
@@ -286,7 +286,7 @@ export function makeUi() {
   bckEle.style.left = (window.innerWidth / 100) + boxes.rEleBB.width + 2 + "px"
 
   boxes.update();
-  lEle.style.left = boxes.fwdEleBB.left + boxes.fwdEleBB.width + 2 + 'px'
+  rEle.style.left = boxes.fwdEleBB.left + boxes.fwdEleBB.width + 2 + 'px'
   
   // fuel disp
   let box = document.getElementsByClassName("topL")[0]
