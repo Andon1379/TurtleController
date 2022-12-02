@@ -14,27 +14,27 @@ end
 Url = ""
 --os.setComputerLabel("")
 t_id = os.getComputerID()
-SG_id = nil -- server given id 
+SG_id = nil -- server given id
 
 function Eval_cmd(command)
   local a = "return " .. command
   local func, err = load(a)
-  if func then 
-      local ok, add, errStr = pcall(func)
-      -- ok is if it is an accepted function
-      -- add is if it was run correctly
-      -- errStr is the returned str if add is false
-      if ok then
-        --- additional code to run when func is run
-        --print(ok, add, errStr)
-        return add, errStr
-      else
-        --print("exec error: ", add)
-        return "exec error: " .. add
-      end
-  else 
-      --print("compilation error: ", err)
-      return "compilation error: " .. err
+  if func then
+    local ok, add, errStr = pcall(func)
+    -- ok is if it is an accepted function
+    -- add is if it was run correctly
+    -- errStr is the returned str if add is false
+    if ok then
+      --- additional code to run when func is run
+      --print(ok, add, errStr)
+      return add, errStr
+    else
+      --print("exec error: ", add)
+      return "exec error: " .. add
+    end
+  else
+    --print("compilation error: ", err)
+    return "compilation error: " .. err
   end
 end
 
@@ -53,7 +53,7 @@ function make_packet(message)
       --print(textutils.serializeJSON(item))
       --i_str = tostring(i)
       table.insert(inventory.slots, i, item)
-    else 
+    else
       local slot = {}
       slot.name = ""
       slot.count = 0
@@ -62,8 +62,8 @@ function make_packet(message)
     end
   end
   --print(myFun.ObjToJSON(inventory.slots))
-  local fuel = {fuelLevel = fuelLevel, fuelLimit = fuelLimit} 
-  --- rest of needed 
+  local fuel = {fuelLevel = fuelLevel, fuelLimit = fuelLimit}
+  --- rest of needed
   --- make new obj, with a obj in it. this new obj should include the blocks above, below, and in front of.
   local blocks = { up={}, front={}, down={} }
   blocks.up.sucess, blocks.up.data = turtle.inspectUp()
@@ -71,7 +71,7 @@ function make_packet(message)
   blocks.down.sucess, blocks.down.data = turtle.inspectDown()
   --print(message)
   --if type(message)=="table" then for k,v in pairs(message) do print( k,v ) end end
-  local a = {type="turtle_client",name="",SG_id = SG_id, id=t_id,message=message,fuel=fuel,inventory=inventory,blocks=blocks} 
+  local a = {type="turtle_client",name="",SG_id = SG_id, id=t_id,message=message,fuel=fuel,inventory=inventory,blocks=blocks}
   if name == "" or name == nil then
     a.name = "Default Name"
   else
@@ -91,8 +91,8 @@ function Post(message, Url, appendURL)
     --print(Url..appendURL)
     local resCode, resTitle = c.getResponseCode()
     print("ERROR ON POST: ("..resCode..") "..resTitle)
-    return nil 
-  end 
+    return nil
+  end
   local res = req.readAll()
   req.close()
   return res
@@ -123,9 +123,17 @@ function Start() --- add SG_id to the settings file
   --print(Url)
   local base_url = string.sub(Url, 0, string.find(Url, "/turtle"))
   --print(base_url)
-  
-  local check1 = http.checkURL(base_url) --- this is part of computercraft's api
-  
+
+  local url = base_url
+  if (string.find(Url, "https://") ~= nil and string.find(Url, "wss://") ~= nil) then
+    url = "https://" .. url
+  else
+    url = "http://" .. url
+  end
+
+
+  local check1 = http.checkURL(url) --- this is part of computercraft's api
+
   settings.set("addr", base_url)
   settings.save("./.turtle")
 
@@ -134,21 +142,28 @@ function Start() --- add SG_id to the settings file
     return 1
   end
 
-  local base_wsUrl
-  if string.sub(base_url, 0, string.find(base_url, "https://")) then
-    local b, c = string.find(base_url, "https://") 
-    if c == nil then b,c = string.find(base_url,"http://") end 
-    local a = string.sub(base_url, c+1, string.len(base_url))
-    base_wsUrl = "wss://".. a
+  local base_wsUrl = base_url
+  if (string.find(Url, "https://") ~= nil and string.find(Url, "wss://") ~= nil) then
+    base_wsUrl = "wss://" .. base_wsUrl
+  else
+    base_wsUrl = "ws://" .. base_wsUrl
   end
+  -- if string.sub(url, 0, string.find(url, "https://")) then
+  --   local b, c = string.find(url, "https://")
+  --   if c == nil then b,c = string.find(url,"http://") end
+  --   local a = string.sub(url, c+1, string.len(url))
+  --   print(a,b,c)
+  --   wsUrl = "wss://".. a
+  -- end
+
   --print("base_url: "..base_url)
-  --print(base_wsUrl)
+  -- print(base_wsUrl)
   --print(Url)
 
 
   if SG_id == nil then
     --print(Url)
-    jsonData = Post('',Url,"/turtle")
+    jsonData = Post('',url,"/turtle")
     if jsonData == nil then
       error("404 not found")
     end
@@ -166,6 +181,7 @@ function Start() --- add SG_id to the settings file
     if ws == false then
       print("Websocket connection failed: "..reason)
     end
+    print("Connected to " .. base_url)
   end
 
   while true do
@@ -173,7 +189,7 @@ function Start() --- add SG_id to the settings file
 
     --print(ws)
     --local url, event, closeUrl, closeEvent
-    
+
     --event, url, jsonData = os.pullEvent("websocket_message")
     --closeEvent, closeUrl = os.pullEvent("websocket_closed")
     local event = {os.pullEvent()}
@@ -196,15 +212,15 @@ function Start() --- add SG_id to the settings file
       local data = textutils.unserializeJSON(event[3])
       if (data.message == nil) then data.message = "" end
       --for k,v in pairs(data) do print( k,v ) end
-      if data.message ~= "" then 
+      if data.message ~= "" then
         local command_OUT = nil
-        if data.isDone == false then 
+        if data.isDone == false then
           if data.isRepeat == true then
             for i = data.doFor,0,-1 do
               --print(data.message)
-              -- does data.doFor exist? 
+              -- does data.doFor exist?
 
-              local a 
+              local a
               command_OUT, a = Eval_cmd(data.message)
               if(a ~= "") then print(a) end
               data.times = data.times + 1
@@ -212,7 +228,7 @@ function Start() --- add SG_id to the settings file
             --command_OUT = Eval_cmd(data.message) --- i forget if this will work
             data.isDone = true
             data.rMsg = command_OUT
-          end 
+          end
           if data.isRepeat == false then
             command_OUT = Eval_cmd(data.message)
             data.isDone = true

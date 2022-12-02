@@ -44,11 +44,13 @@ window.setUrl = function() {
         renderedObjects = focusNewTurt(res.list, 0, []);
     
         // WS 
-        let wsUrl = (url.startsWith('wss://') ? url + "/0": "wss://" + url.slice( (url.length * -1) + 8 ) + "/0")
+        let wsUrl = (url.startsWith('wss://') || url.startsWith('ws://')) ? `${ url }/0` : `${url.replace(/[A-z0-9]+\:\/\//, location.protocol == "https:" ? "wss://" : "ws://")}/0`
+        // let wsUrl = (url.startsWith('wss://') ? url + "/0": "wss://" + url.slice( (url.length * -1) + 8 ) + "/0")
         console.log(wsUrl)
         start(wsUrl);
       } else {
-        let wsUrl = (url.startsWith('wss://') ? url : "wss://" + url.slice( (url.length * -1) + 8 ))
+        let wsUrl = (url.startsWith('wss://') || url.startsWith('ws://')) ? url : url.replace(/[A-z0-9]+\:\/\//, location.protocol == "https:" ? "wss://" : "ws://")
+        // let wsUrl = (url.startsWith('wss://') ? url : "wss://" + url.slice( (url.length * -1) + 8 ))
         start(wsUrl, (resT)=>{
           //console.log(resT)
           if (resT.list.length > 0) {

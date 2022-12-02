@@ -331,7 +331,7 @@ function animate() {
   stats.end()
   //stats.update()
 	requestAnimationFrame( animate );
-  console.log(stats.fps)
+  // console.log(stats.fps)
 
 }
 
