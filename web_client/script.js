@@ -2,6 +2,7 @@ import { get_req, start, end, url, changeUrl, send, socket } from "./modules/com
 import { makeUi } from "./modules/gui.js"
 import { focusNewTurt, handleTurtChange } from "./modules/msc.js"
 import { moveTurtle } from "./modules/motion.js"
+import { fpsClose, fpsShow } from "./modules/3.js";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/EventSource
 // https://developer.mozilla.org/en-US/docs/Web/API/fetch
@@ -99,6 +100,7 @@ function addListeners() {
     //console.log("a", renderedObjects);
   })
 
+  var fpsshown = false;
   document.addEventListener("keydown", dothing);
   async function dothing(e) {
     if (e.code == "ArrowUp" || e.code == "KeyW") { moveTurtle("forward"); }
@@ -124,7 +126,9 @@ function addListeners() {
       //console.log(renderedObjects)
       renderedObjects = await handleTurtChange(-1, renderedObjects); 
       //console.log("a", renderedObjects)
+    } else if (e.code == "KeyI") {
+      if (!fpsshown) { fpsShow(); fpsshown=true } else { fpsClose(); fpsshown=false }
     }
-    //else {console.log("Unhandled keypress: " + e.code)};
+    else {console.log("Unhandled keypress: " + e.code)};
   }
 }

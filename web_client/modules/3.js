@@ -1,6 +1,8 @@
 import * as THREE from 'https://cdn.skypack.dev/three@v0.132.2';
 import {OrbitControls} from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
+//import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
+// unused
+import Stats from 'https://cdn.skypack.dev/stats.js.fps';
 
 import {hoverInfoAppear, hoverInfoDisappear, idObj} from "/modules/gui.js";
 
@@ -9,6 +11,14 @@ export let meshList;
 export let camera, scene, renderer;
 export let orbit;
 export let raycaster, mouse;
+var stats
+
+export function fpsShow() {
+  stats.dom.style.display = 'block';//.setAttribute('style', 'display: block;')
+}
+export function fpsClose() {
+  stats.dom.style.display = 'none';//.setAttribute('style', 'display: none;')iiii
+}
 
 export function init(){
   meshList = []
@@ -22,6 +32,15 @@ export function init(){
   
   renderer = new THREE.WebGLRenderer();
   renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setScissorTest(true);
+  renderer.setScissor(0,0, window.innerWidth, window.innerHeight);
+
+  // fps counter
+
+  stats = new Stats();
+  stats.showPanel(0);
+  document.body.appendChild(stats.dom)
+
 
   document.body.appendChild( renderer.domElement );
   
@@ -32,16 +51,19 @@ export function init(){
   orbit.update();
 }
 init();
+fpsClose();
 
 export function removeCube(obj) {
   try {
     //console.log(obj.mesh.name.slice(0,6) == "turtle")
+    //console.log(scene.children.length, meshList.length)
+    //console.log(renderer.info.render.triangles, renderer.info.memory.geometries, renderer.getScissorTest())
   
     if (obj.mesh.name.slice(0,6) === "turtle") {
       let meshName = obj.mesh.name
       let selectedObject = scene.getObjectByName(meshName);
       
-      //onsole.log(selectedObject.geometry, selectedObject.material)
+      //console.log(selectedObject.geometry, selectedObject.material)
       
       scene.remove( selectedObject );
       selectedObject.geometry.dispose();
@@ -99,6 +121,8 @@ let turtleMesh = makeTurtleMesh();
 let blockGeometry = new THREE.BoxGeometry( 1, 1, 1 );
 let wireframeGeometry = new THREE.EdgesGeometry( blockGeometry );
 
+
+// rendering cubes would be more efficent if we had them all as one shape, or at least connected ones of the same type. 
 export function visualizeCube(cubeObj) {
   //console.log(cubeObj)
   if (cubeObj._type == "turtle") { // if turtle
@@ -254,7 +278,8 @@ function render() {
 	//for ( let i = 0; i < intersects.length; i ++ ) {
 		//console.log(intersects[i].object.name);
 	//}
-	renderer.render( scene, camera );
+  // rendering the scene after this anyways!
+	//renderer.render( scene, camera );
 
 }
 
@@ -292,11 +317,22 @@ export function cTarget(targetCube, oldTar, fov = 70) {
 
 
 function animate() {
-	requestAnimationFrame( animate );
-  window.requestAnimationFrame(render);
+
+  stats.begin()
+  //requestAnimationFrame( render );
+  // if we call render() as a callback, why are we running it again?
   render();
+
 	// required if orbit.enableDamping or orbit.autoRotate are set to true
 	orbit.update();
+
 	renderer.render( scene, camera );
+  
+  stats.end()
+  //stats.update()
+	requestAnimationFrame( animate );
+  console.log(stats.fps)
+
 }
+
 animate();

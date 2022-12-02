@@ -41,6 +41,7 @@ export function turtUpdater(turtObj) {
   // im just going to reset the entire world. 
   // On a small scale, this isn't a problem
 
+  //console.log(renderedObjects.length)
   try { renderedObjects.forEach( (e) =>{
     removeCube(e)
   }); } catch (err) { console.log(err) }
@@ -53,6 +54,6 @@ export function turtUpdater(turtObj) {
   setCs_curTurtVisual(rendered[0]);
   setRenderedObjects(rendered);
 
-  rotate(cs_curTurtVisual, makeRadian( (turtObj.turn == 1 || turtObj.turn == 3) ? turtObj.turn * 90 : turtObj.turn * -90 ));
+  rotate(cs_curTurtVisual, makeRadian( (Math.abs(turtObj.turn) == 1 || Math.abs(turtObj.turn) == 3) ? turtObj.turn * 90 : turtObj.turn * -90 ));
   cTarget(cs_curTurtVisual, oldObj);
 }

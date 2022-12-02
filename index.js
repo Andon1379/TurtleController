@@ -73,8 +73,6 @@ class turtTest {
       } else { return false } // block does not have conflicitng coords
     }, this)
 
-    //this.fuelLevel = this.fuelLevel - 1; // TOFIX: actually get turtle data here
-
     return Cube 
   }
 
