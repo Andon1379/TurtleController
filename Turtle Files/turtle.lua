@@ -127,10 +127,9 @@ function Start() --- add SG_id to the settings file
   local url = base_url
   if (string.find(Url, "https://") ~= nil and string.find(Url, "wss://") ~= nil) then
     url = "https://" .. url
-  else
+  elseif (string.find(Url, "http://") ~= nil and string.find(Url, "ws://") ~= nil) then
     url = "http://" .. url
   end
-
 
   local check1 = http.checkURL(url) --- this is part of computercraft's api
 
@@ -143,9 +142,11 @@ function Start() --- add SG_id to the settings file
   end
 
   local base_wsUrl = base_url
-  if (string.find(Url, "https://") ~= nil and string.find(Url, "wss://") ~= nil) then
-    base_wsUrl = "wss://" .. base_wsUrl
-  else
+  if (string.find(Url, "https://") ~= nil and string.find(Url, "wss://") == nil) then
+    local a, s = string.find(Url, "https://")
+    --print(a, s)
+    base_wsUrl = "wss://" .. string.sub(base_wsUrl,s+1)
+  elseif (string.find(Url, "http://") ~= nil ) then -- and string.find(Url, "ws://") ~= nil) then
     base_wsUrl = "ws://" .. base_wsUrl
   end
   -- if string.sub(url, 0, string.find(url, "https://")) then
@@ -180,6 +181,7 @@ function Start() --- add SG_id to the settings file
     --print(wsUrl)
     if ws == false then
       print("Websocket connection failed: "..reason)
+      error()
     end
     print("Connected to " .. base_url)
   end

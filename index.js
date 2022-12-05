@@ -459,6 +459,7 @@ async function run() {
 
           turtList[id].message = data.message
           //console.log(data.message)
+          //Twss.clients.forEach((a)=>{console.log(a.readyState)})
 
           Twss.clients.forEach(function each(client) {
             if(client.readyState == WebSocket.OPEN && client.connectedID == id) {
@@ -610,6 +611,7 @@ async function run() {
       // update web clients
       let toSend = JSON.stringify(turtList[id]); 
       WCwss.clients.forEach(function each(client) {
+        //console.log(WCwss.clients)
         if(client.readyState === WebSocket.OPEN && client.connectedID === id) {
           console.log(toSend)
           //console.log(client.connectedID);
@@ -637,6 +639,7 @@ async function run() {
         WCwss.emit('connection', ws, req);
       });
     } else if (req.url.split('/')[1] === "turtle") {
+      //console.log(req)
       Twss.handleUpgrade(req, socket, head, function done(ws, req) {
         Twss.emit('connection', ws, req);
       });
