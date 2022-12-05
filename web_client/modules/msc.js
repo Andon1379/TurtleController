@@ -129,7 +129,7 @@ export async function handleTurtChange(shift, oldRender) {
   } else { cs_selectedTurt = cs_selectedTurt + shift; }
 
   end(socket);
-  let wsUrl = (url.startsWith('wss://') ? url + `/${cs_selectedTurt}`: "wss://" + url.slice( (url.length * -1) + 8 ) + `/${cs_selectedTurt}`)
+  let wsUrl = (url.startsWith('wss://') || url.startsWith('ws://')) ? `${ url }/${ cs_selectedTurt }` : `${url.replace(/[A-z0-9]+\:\/\//, location.protocol == "https:" ? "wss://" : "ws://")}/${cs_selectedTurt}` //"wss://" + url.slice( (url.length * -1) + 8 ) + `/${cs_selectedTurt}`)
     console.log(wsUrl)
     start(wsUrl);
 

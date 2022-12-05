@@ -176,7 +176,7 @@ export async function send(socket, data) {
   if (socket.readyState !== 1) {
     //setTimeout(()=>{send(socket, data);}, 750);
     await sleep(50);
-    send(socket, data);
+    return send(socket, data); // Add return statement so this run of the function doesn't continue
   }
   if (typeof data === "string") {
     socket.send(data);
